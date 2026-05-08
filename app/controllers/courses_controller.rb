@@ -49,7 +49,7 @@ class CoursesController < ApplicationController
   end
 
   def course_params
-    params.permit(:name, :description, :start_date, :end_date)
+    params.permit(:name, :description, :start_date, :end_date, :image_url, :level)
   end
 
   def course_response(course)
@@ -59,6 +59,8 @@ class CoursesController < ApplicationController
       description: course.description,
       start_date: course.start_date,
       end_date: course.end_date,
+      image_url: course.image_url,
+      level: course.level,
       creator_id: course.creator_id,
       created_at: course.created_at,
       updated_at: course.updated_at
