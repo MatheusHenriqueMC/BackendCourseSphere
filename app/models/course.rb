@@ -5,6 +5,8 @@ class Course < ApplicationRecord
   validates :name, presence: true, length: { minimum: 3 }
   validates :start_date, presence: true
   validates :end_date, presence: true
+  validates :level, inclusion: { in: %w[beginner intermediate advanced] }, allow_blank: true
+  validates :image_url, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: 'must be a valid URL' }, allow_blank: true
   validate :end_date_after_start_date
 
   private
