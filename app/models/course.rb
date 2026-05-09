@@ -2,6 +2,8 @@ class Course < ApplicationRecord
   belongs_to :creator, class_name: 'User'
   has_many :sections, dependent: :destroy
   has_many :lessons, dependent: :destroy
+  has_many :enrollments, dependent: :destroy
+  has_many :enrolled_users, through: :enrollments, source: :user
 
   validates :name, presence: true, length: { minimum: 3 }
   validates :start_date, presence: true

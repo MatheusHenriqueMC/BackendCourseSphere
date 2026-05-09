@@ -67,6 +67,8 @@ class CoursesController < ApplicationController
       image_url: course.image_url,
       level: course.level,
       creator_id: course.creator_id,
+      enrollment_count: course.enrollments.count,
+      is_enrolled: current_user.enrollments.exists?(course: course),
       created_at: course.created_at,
       updated_at: course.updated_at
     }
