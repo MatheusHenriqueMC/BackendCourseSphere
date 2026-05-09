@@ -53,4 +53,6 @@ gem 'jwt'
 
 # CORS
 gem 'rack-cors'
+
+gem 'httparty'
 end
