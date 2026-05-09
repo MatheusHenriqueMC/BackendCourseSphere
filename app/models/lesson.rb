@@ -1,5 +1,6 @@
 class Lesson < ApplicationRecord
   belongs_to :course
+  belongs_to :section, optional: true
 
   validates :title, presence: true, length: { minimum: 3 }
   validates :status, presence: true, inclusion: { in: %w[draft published] }

@@ -56,7 +56,7 @@ class LessonsController < ApplicationController
   end
 
   def lesson_params
-    params.permit(:title, :status, :video_url)
+    params.permit(:title, :status, :video_url, :section_id)
   end
 
   def lesson_response(lesson)
@@ -66,6 +66,7 @@ class LessonsController < ApplicationController
       status: lesson.status,
       video_url: lesson.video_url,
       course_id: lesson.course_id,
+      section_id: lesson.section_id,
       created_at: lesson.created_at,
       updated_at: lesson.updated_at
     }
