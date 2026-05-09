@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   resources :courses, only: [:index, :show, :create, :update, :destroy] do
     resources :lessons, only: [:index, :show, :create, :update, :destroy]
+    resources :sections, only: [:index, :create, :update, :destroy]
     post 'chat', to: 'chat#create'
   end
 
