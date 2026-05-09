@@ -24,9 +24,10 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/coursesphere_development
-      JWT_SECRET: minha-chave-secreta-dev-123
-      RAILS_ENV: development
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      RAILS_ENV: ${RAILS_ENV}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
 
 volumes:
   pgdata:
