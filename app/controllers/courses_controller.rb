@@ -3,8 +3,13 @@ class CoursesController < ApplicationController
   before_action :authorize_creator, only: [:update, :destroy]
 
   def index
-    courses = current_user.courses
-    render json: courses, status: :ok
+    courses = Course.all
+
+    if params[:search].present?
+      courses = courses.where('name ILIKE ?', "%#{params[:search]}%")
+    end
+
+    render json: courses.map { |course| course_response(course) }, status: :ok
   end
 
   def show
