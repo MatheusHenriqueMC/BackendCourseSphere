@@ -1,7 +1,7 @@
 class SectionsController < ApplicationController
   before_action :set_course
   before_action :set_section, only: [:update, :destroy]
-  before_action :authorize_course_creator
+  before_action :authorize_course_creator, only: [:create, :update, :destroy]
 
   def index
     sections = @course.sections.includes(:lessons)
