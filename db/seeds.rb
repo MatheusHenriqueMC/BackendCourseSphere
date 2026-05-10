@@ -25,8 +25,8 @@ student2 = User.create!(
 )
 
 student3 = User.create!(
-  name: "Ana Carolina",
-  email: "ana@test.com",
+  name: "Isaac",
+  email: "isaac@test.com",
   password: "123456"
 )
 
@@ -363,7 +363,7 @@ puts "Users created:"
 puts "  admin@coursesphere.com / 123456"
 puts "  matheus@test.com / 123456"
 puts "  matheusstepple@test.com / 123456"
-puts "  ana@test.com / 123456"
+puts "  isaac@test.com / 123456"
 puts ""
 puts "Courses: #{Course.count}"
 puts "Sections: #{Section.count}"
