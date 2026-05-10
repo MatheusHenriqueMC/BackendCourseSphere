@@ -55,4 +55,7 @@ gem 'jwt'
 gem 'rack-cors'
 
 gem 'httparty'
+
+gem 'rswag-api'
+gem 'rswag-ui'
 end
