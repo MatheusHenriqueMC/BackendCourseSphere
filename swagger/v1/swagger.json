@@ -1,0 +1,415 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CourseSphere API",
+    "description": "API for collaborative online course management platform",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Matheus" },
+                  "email": { "type": "string", "example": "matheus@test.com" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "422": { "description": "Validation errors" }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login and receive JWT token",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "matheus@test.com" },
+                  "password": { "type": "string", "example": "123456" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/courses": {
+      "get": {
+        "summary": "List all courses",
+        "tags": ["Courses"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Filter courses by name"
+          }
+        ],
+        "responses": {
+          "200": { "description": "List of courses" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "post": {
+        "summary": "Create a new course",
+        "tags": ["Courses"],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Python Basics" },
+                  "description": { "type": "string", "example": "Learn Python from scratch" },
+                  "start_date": { "type": "string", "format": "date", "example": "2026-05-10" },
+                  "end_date": { "type": "string", "format": "date", "example": "2026-07-10" },
+                  "image_url": { "type": "string", "example": "https://example.com/image.gif" },
+                  "level": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] }
+                },
+                "required": ["name", "start_date", "end_date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Course created" },
+          "422": { "description": "Validation errors" }
+        }
+      }
+    },
+    "/courses/{id}": {
+      "get": {
+        "summary": "Show course details",
+        "tags": ["Courses"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Course details" },
+          "404": { "description": "Course not found" }
+        }
+      },
+      "put": {
+        "summary": "Update a course (creator only)",
+        "tags": ["Courses"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "start_date": { "type": "string", "format": "date" },
+                  "end_date": { "type": "string", "format": "date" },
+                  "image_url": { "type": "string" },
+                  "level": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Course updated" },
+          "403": { "description": "Forbidden" },
+          "422": { "description": "Validation errors" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a course (creator only)",
+        "tags": ["Courses"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Course deleted" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/courses/{course_id}/sections": {
+      "get": {
+        "summary": "List course sections with lessons",
+        "tags": ["Sections"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "List of sections" }
+        }
+      },
+      "post": {
+        "summary": "Create a section (creator only)",
+        "tags": ["Sections"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Getting Started" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Section created" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/courses/{course_id}/sections/{id}": {
+      "put": {
+        "summary": "Update a section (creator only)",
+        "tags": ["Sections"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Section updated" },
+          "403": { "description": "Forbidden" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a section (creator only)",
+        "tags": ["Sections"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Section deleted" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/courses/{course_id}/lessons": {
+      "get": {
+        "summary": "List course lessons",
+        "tags": ["Lessons"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "List of lessons" }
+        }
+      },
+      "post": {
+        "summary": "Create a lesson (creator only)",
+        "tags": ["Lessons"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Introduction to Python" },
+                  "status": { "type": "string", "enum": ["draft", "published"] },
+                  "video_url": { "type": "string", "example": "https://youtube.com/watch?v=123" },
+                  "section_id": { "type": "integer", "example": 1 }
+                },
+                "required": ["title", "status"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Lesson created" },
+          "403": { "description": "Forbidden" },
+          "422": { "description": "Validation errors" }
+        }
+      }
+    },
+    "/courses/{course_id}/lessons/{id}": {
+      "get": {
+        "summary": "Show lesson details",
+        "tags": ["Lessons"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Lesson details" }
+        }
+      },
+      "put": {
+        "summary": "Update a lesson (creator only)",
+        "tags": ["Lessons"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "status": { "type": "string", "enum": ["draft", "published"] },
+                  "video_url": { "type": "string" },
+                  "section_id": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Lesson updated" },
+          "403": { "description": "Forbidden" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a lesson (creator only)",
+        "tags": ["Lessons"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Lesson deleted" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/courses/{course_id}/enroll": {
+      "post": {
+        "summary": "Enroll in a course",
+        "tags": ["Enrollment"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "201": { "description": "Enrolled successfully" },
+          "422": { "description": "Already enrolled" }
+        }
+      }
+    },
+    "/courses/{course_id}/unenroll": {
+      "delete": {
+        "summary": "Unenroll from a course",
+        "tags": ["Enrollment"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Unenrolled successfully" },
+          "404": { "description": "Not enrolled" }
+        }
+      }
+    },
+    "/courses/{course_id}/chat": {
+      "post": {
+        "summary": "Send a message to the AI course assistant",
+        "tags": ["AI Chat"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          { "name": "course_id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string", "example": "What will I learn in this course?" }
+                },
+                "required": ["message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "AI response" },
+          "422": { "description": "Message is required" }
+        }
+      }
+    }
+  }
+}
